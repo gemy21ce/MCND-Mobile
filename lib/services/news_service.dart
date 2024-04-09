@@ -16,7 +16,8 @@ class NewsService {
     final List<ApiNewsPost> apiPosts = await _api.getNewsPosts();
     return (await Future.wait(
       apiPosts.map((apiPost) async {
-        final ApiFeaturedMedia media = await _api.getFeaturedMedia(apiPost.featuredMedia);
+        final ApiFeaturedMedia? media = apiPost.featuredMedia == 0?
+            null : await _api.getFeaturedMedia(apiPost.featuredMedia);
         return _mapper.mapApiNewsPost(apiPost, media);
       }),
     ))
