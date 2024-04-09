@@ -21,13 +21,13 @@ class _HomeScreenDrawerItems {
   const _HomeScreenDrawerItems(this.title, {required this.icon, required this.routePath, this.type = URLType.internal});
 }
 
-const String mosqueProjectURL = 'https://www.mcnd.ie/mosqueproject';
-const String donateURL = 'https://www.mcnd.ie/charity';
-const String aboutUsURL = 'https://www.mcnd.ie/about';
+const String mosqueProjectURL = 'https://sdic.ie/contact';
+const String donateURL = 'https://www.sdic.ie';
+const String aboutUsURL = 'https://www.sdic.ie';
 
 final _drawerItems = [
   const _HomeScreenDrawerItems('Home', icon: Icons.home, routePath: '/'),
-  const _HomeScreenDrawerItems('Mosque Project',
+  const _HomeScreenDrawerItems('Mosque',
       icon: Icons.info_outline, routePath: mosqueProjectURL, type: URLType.external),
   const _HomeScreenDrawerItems('Donate', icon: Icons.euro, routePath: donateURL, type: URLType.external),
   const _HomeScreenDrawerItems('About Us', icon: Icons.info_outline, routePath: aboutUsURL, type: URLType.external),
