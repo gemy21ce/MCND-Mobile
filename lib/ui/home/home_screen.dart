@@ -21,9 +21,9 @@ class _HomeScreenDrawerItems {
   const _HomeScreenDrawerItems(this.title, {required this.icon, required this.routePath, this.type = URLType.internal});
 }
 
-const String mosqueProjectURL = 'https://sdic.ie/contact';
-const String donateURL = 'https://www.sdic.ie';
-const String aboutUsURL = 'https://www.sdic.ie';
+const String mosqueProjectURL = 'https://hicc.ie/contact';
+const String donateURL = 'https://www.hicc.ie';
+const String aboutUsURL = 'https://www.hicc.ie';
 
 final _drawerItems = [
   const _HomeScreenDrawerItems('Home', icon: Icons.home, routePath: '/'),
@@ -43,7 +43,7 @@ class HomeScreen extends HookWidget {
     return Scaffold(
       appBar: AppBar(
         title: const AutoSizeText(
-          'South Dublin Islamic Centre',
+          'Hansfield Islamic Cultural Centre',
           maxLines: 1,
           maxFontSize: 30,
           minFontSize: 15,
