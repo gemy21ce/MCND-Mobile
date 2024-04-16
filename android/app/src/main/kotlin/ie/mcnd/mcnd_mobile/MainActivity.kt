@@ -1,4 +1,4 @@
-package ie.sdic.sdic_mobile
+package ie.hicc.hicc_mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
