@@ -14,7 +14,7 @@ abstract class AppModule {
   Dio get httpClient {
     final dio = Dio();
 
-    dio.options.baseUrl = 'https://sdic.ie/wp-json/';
+    dio.options.baseUrl = 'https://hicc.ie/wp-json/';
 
     if (kDebugMode) {
       dio.interceptors.add(PrettyDioLogger());
