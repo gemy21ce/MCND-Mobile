@@ -4,6 +4,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mcnd_mobile/core/utils/indexed_iterable.dart';
 import 'package:mcnd_mobile/di/providers.dart';
+import 'package:mcnd_mobile/main.dart';
+import 'package:mcnd_mobile/services/shared_pref_manager.dart';
+import 'package:mcnd_mobile/services/theme_manager.dart';
 import 'package:mcnd_mobile/ui/settings/settings_model.dart';
 import 'package:mcnd_mobile/ui/shared/hooks/use_once.dart';
 import 'package:mcnd_mobile/ui/shared/utils/separated_widget_list.dart';
@@ -14,6 +17,10 @@ class SettingsScreen extends HookWidget {
     final viewModel = useProvider(settingsViewModelProvider);
     useOnce(() => viewModel.load());
     final state = useProvider(settingsViewModelProvider.state);
+    final count = useProvider(themeProvider);
+    print("///////////////");
+    print(count);
+    print(count.getFontSize());
     return Scaffold(
       appBar: AppBar(
         title: const AutoSizeText(
@@ -33,11 +40,42 @@ class SettingsScreen extends HookWidget {
               const SettingsHeader(text: 'Azan Notifications'),
               ...state.azanSettingsItems
                   .map((e) => SettingsItem(
-                        item: e,
-                        options: state.azanSettingsOptions,
-                      ))
+                item: e,
+                options: state.azanSettingsOptions,
+              ))
                   .toList()
                   .separatedByDivider(),
+              const SizedBox(height: 50),
+              const SettingsHeader(text: 'App Settings'),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  children: [
+                    Text(
+                      'Azan Times Font Size',
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                    const SizedBox(width: 12),
+                    const Spacer(),
+                    DropdownButton<AppFontSize>(
+                      underline: const SizedBox(),
+                      value: count.getFontSize(),
+                      items: AppFontSize.values.map((e) => DropdownMenuItem<AppFontSize>(
+                        value: e,
+                        child: Text(
+                          e.name,
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.bodyText2,
+                        ),
+                      )).toList(),
+                      onChanged: (value) {
+                        if (value == null) return;
+                        count.changeFontSize(value);
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ],
           );
         },

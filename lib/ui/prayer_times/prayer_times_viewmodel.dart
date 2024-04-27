@@ -47,8 +47,8 @@ class PrayerTimesViewModel extends StateNotifier<PrayerTimesModel> {
   void startTicker() {
     _ticker = Timer.periodic(_tickerDuration, (_) {
       if (state is Loaded) {
-        if (_prayerTime != null &&
-            _clock.now().isDateOnlyAfter(_prayerTime!.date)) {
+        if (_prayerTime?.times[Salah.isha]?.iqamah != null &&
+            _clock.now().isAfter(_prayerTime!.times[Salah.isha]!.iqamah!)) {
           fetchTimes(force: true);
         } else {
           state = PrayerTimesModel.loaded(_toModelData());
@@ -72,8 +72,7 @@ class PrayerTimesViewModel extends StateNotifier<PrayerTimesModel> {
         HijriCalendar.fromDate(_prayerTime.date).toFormat(_hijriDatePattern);
 
     final upcomingSalah = nearestSalah(_prayerTime, now);
-    final upcomingSalahString =
-        'Time To ${upcomingSalah.getStringName().toUpperCase()}';
+    final upcomingSalahString = upcomingSalah.getStringName().toUpperCase();
 
     final upcomingSalahTime = _prayerTime.times[upcomingSalah]!;
     final upcomingDateTime = upcomingSalahTime.azan;
@@ -81,6 +80,16 @@ class PrayerTimesViewModel extends StateNotifier<PrayerTimesModel> {
         upcomingDateTime.difference(now).getTimeDifferenceString(
               seconds: false,
             );
+    final upcomingIqamah = nearestIqamah(_prayerTime, now, upcomingDateTime);
+    final upcomingIqamahString =
+        '${upcomingIqamah?.getStringName().toUpperCase()} Iqamah';
+    String? timeToUpcomingIqamah;
+    if (upcomingIqamah != null) {
+      timeToUpcomingIqamah =
+        _prayerTime.times[upcomingIqamah]!.iqamah!.difference(now).getTimeDifferenceString(
+                  seconds: false,
+                );
+    }
 
     final items = _prayerTime.times.entries.map((e) {
       final salah = e.key;
@@ -99,6 +108,8 @@ class PrayerTimesViewModel extends StateNotifier<PrayerTimesModel> {
       hijriDate: hijriDateString,
       upcommingSalah: upcomingSalahString,
       timeToUpcommingSalah: timeToUpcomingSalah,
+      upcommingIqamah: upcomingIqamahString,
+      timeToUpcomingIqamah: timeToUpcomingIqamah,
       times: items,
     );
   }
@@ -115,5 +126,23 @@ class PrayerTimesViewModel extends StateNotifier<PrayerTimesModel> {
       }
     }
     return times.last.key;
+  }
+
+  Salah? nearestIqamah(DayPrayers prayerTime, DateTime forTime, DateTime upcomingSalahTime) {
+    // final times = prayerTime.times.entries.toList()
+    //   ..sort((a, b) {
+    //     return a.value.iqamah?.compareTo(b.value.iqamah) ?? -1;
+    //   });
+    for (final t in prayerTime.times.entries) {
+      if (t.value.iqamah?.isAfter(forTime) ?? false) {
+        if (t.key == Salah.isha && t.value.azan.isBefore(forTime)) {
+          return t.key;
+        }
+        if (t.value.iqamah!.isBefore(upcomingSalahTime)) {
+          return t.key;
+        }
+      }
+    }
+    return null;
   }
 }

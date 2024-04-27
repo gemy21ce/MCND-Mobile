@@ -76,6 +76,7 @@ void main() {
         date: '',
         timeToUpcommingSalah: '',
         upcommingSalah: '',
+        upcommingIqamah: '',
         hijriDate: '',
       ));
       await tester.pumpPrayerTimesPage(providerOverrides: [

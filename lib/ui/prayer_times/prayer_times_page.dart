@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mcnd_mobile/di/providers.dart';
+import 'package:mcnd_mobile/ui/prayer_times/prayer_times_wide_screen.dart';
 import 'package:mcnd_mobile/ui/prayer_times/prayer_times_widget.dart';
 import 'package:mcnd_mobile/ui/shared/hooks/use_once.dart';
 
 class PrayerTimesPage extends HookWidget {
-  const PrayerTimesPage({Key? key}) : super(key: key);
+  final bool wideScreen;
+
+  const PrayerTimesPage({Key? key, this.wideScreen = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +36,7 @@ class PrayerTimesPage extends HookWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: SizedBox(
                   height: constraints.maxHeight,
-                  child: PrayerTimesWidget(prayerTimes),
+                  child: wideScreen ? PrayerTimesWideScreenWidget(prayerTimes) : PrayerTimesWidget(prayerTimes),
                 ),
               ),
             );

@@ -16,6 +16,8 @@ class PrayerTimesModelData with _$PrayerTimesModelData {
     required String hijriDate,
     required String upcommingSalah,
     required String timeToUpcommingSalah,
+    required String upcommingIqamah,
+    String? timeToUpcomingIqamah,
     required List<PrayerTimesModelItem> times,
   }) = _PrayerTimesModelData;
 }

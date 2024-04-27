@@ -1,6 +1,4 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,12 +7,12 @@ import 'package:mcnd_mobile/gen/assets.gen.dart';
 import 'package:mcnd_mobile/ui/prayer_times/prayer_times_model.dart';
 import 'package:mcnd_mobile/ui/shared/styles/app_colors.dart';
 
-import './prayer_times_model.dart';
+import 'clock_widget.dart';
 
-class PrayerTimesWidget extends HookWidget {
+class PrayerTimesWideScreenWidget extends HookWidget {
   final PrayerTimesModelData viewData;
 
-  const PrayerTimesWidget(this.viewData, {Key? key}) : super(key: key);
+  const PrayerTimesWideScreenWidget(this.viewData, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,31 +27,48 @@ class PrayerTimesWidget extends HookWidget {
         color: AppColors.prayerTimeHerderColor,
         topRow: true,
       ),
-      ...viewData.times.map(
-        (time) => buildItemRow(
-          time,
-          color: !time.highlight ? null : AppColors.upcomingPrayerColor,
-          bottomRow: time == viewData.times.last,
-        ),
-      )
+      ...viewData.times.where((element) => element.iqamah != null).map(
+            (time) => buildItemRow(
+              time,
+              color: !time.highlight ? null : AppColors.upcomingPrayerColor,
+              bottomRow: time == viewData.times.last,
+            ),
+          )
     ];
     final size = MediaQuery.of(context).size;
-    return SizedBox.expand(
+    return SingleChildScrollView(
       child: Column(
         children: [
-          Flexible(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return Container(
-                  constraints: BoxConstraints(
-                    maxHeight: size.height * 0.25,
-                  ),
-                  padding: EdgeInsets.all(constraints.maxHeight * 0.15),
-                  child: Assets.images.logoLarge.image(),
-                );
-              },
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.all(20),
+              constraints: BoxConstraints(
+                maxHeight: size.height * 0.05,
+              ),
+              child: Assets.images.logoLarge.image(),
             ),
           ),
+          const ClockWidget(),
+          SizedBox(height: size.height * 0.07),
+          Text(
+            viewData.timeToUpcomingIqamah != null
+                ? '${viewData.timeToUpcomingIqamah!.isEmpty ? '' : 'Time To '}'
+                    '${viewData.upcommingIqamah}'
+                : '${viewData.timeToUpcommingSalah.isEmpty ? '' : 'Time To '}'
+                    '${viewData.upcommingSalah}',
+            style: TextStyle(
+              fontSize: MediaQuery.of(context).size.width * 0.07,
+              decoration: TextDecoration.underline,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            viewData.timeToUpcomingIqamah ?? viewData.timeToUpcommingSalah,
+            style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.07),
+          ),
+          SizedBox(height: size.height * 0.05),
           MediaQuery(
             data: MediaQuery.of(context).copyWith(textScaleFactor: size.width * (2.5 / 1000)),
             child: Column(
@@ -81,16 +96,6 @@ class PrayerTimesWidget extends HookWidget {
                         Text(
                           viewData.hijriDate,
                           style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          viewData.upcommingSalah,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          viewData.timeToUpcommingSalah,
-                          style: const TextStyle(fontSize: 16),
                         ),
                         const SizedBox(height: 10),
                         DefaultTextStyle.merge(

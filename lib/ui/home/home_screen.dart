@@ -90,26 +90,43 @@ class HomeScreen extends HookWidget {
           padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
           child: Column(
             children: [
-              ..._drawerItems.map((e) => InkWell(
-                    onTap: () async {
-                      if (e.routePath == '/') {
-                        AutoRouter.of(context).pop(); // close the drawer
-                        return;
-                      }
-                      if (e.type == URLType.internal) {
-                        AutoRouter.of(context).pop(); // close the drawer
-                        AutoRouter.of(context).pushPath(e.routePath);
-                      } else {
-                        await canLaunch(e.routePath)
-                            ? await launch(e.routePath)
-                            : throw 'Could not launch ${e.routePath}';
-                      }
-                    },
-                    child: ListTile(
-                      title: Text(e.title),
-                      leading: Icon(e.icon),
+              ..._drawerItems.map(
+                (e) => InkWell(
+                  onTap: () async {
+                    if (e.routePath == '/') {
+                      AutoRouter.of(context).pop(); // close the drawer
+                      return;
+                    }
+                    if (e.type == URLType.internal) {
+                      AutoRouter.of(context).pop(); // close the drawer
+                      AutoRouter.of(context).pushPath(e.routePath);
+                    } else {
+                      await canLaunch(e.routePath)
+                          ? await launch(e.routePath)
+                          : throw 'Could not launch ${e.routePath}';
+                    }
+                  },
+                  child: ListTile(
+                    title: Text(e.title),
+                    leading: Icon(e.icon),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  AutoRouter.of(context).pop(); // close the drawer
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<PrayerTimesPage>(
+                      builder: (context) => const Scaffold(body: SafeArea(child: PrayerTimesPage(wideScreen: true))),
                     ),
-                  ))
+                  );
+                },
+                child: const ListTile(
+                  title: Text('Wide Screen'),
+                  leading: Icon(Icons.tv),
+                ),
+              ),
             ],
           ),
         ),
