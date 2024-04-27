@@ -22,7 +22,7 @@ class _HomeScreenDrawerItems {
 }
 
 const String mosqueProjectURL = 'https://hicc.ie/contact';
-const String donateURL = 'https://www.hicc.ie';
+const String donateURL = 'https://www.hicc.ie/donate';
 const String aboutUsURL = 'https://www.hicc.ie';
 
 final _drawerItems = [
